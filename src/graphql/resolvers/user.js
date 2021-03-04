@@ -6,6 +6,7 @@ import {
     hash,
     compare
 } from 'bcryptjs';
+import { kebabCase } from "lodash";
 
 import {
     issueToken,
@@ -74,11 +75,11 @@ export default {
         }, {
             User
         }) => {
-            await UserRegisterationRules.validate(newUser, {
-                abortEarly: false
-            });
-
             try {
+                await UserRegisterationRules.validate(newUser, {
+                    abortEarly: false
+                });
+                
                 let {
                     email,
                     username
@@ -116,13 +117,21 @@ export default {
                     user: result
                 }
             } catch (err) {
-                if(err.errors) 
-            	{
-                  let msg = "";
-            	  err.errors.forEach(error => msg = msg + error + '<br />')
-                  err.message = msg
-            	}
-               throw new ApolloError(err.message, 400);
+                let errs = [];
+                if(err.inner){
+                    err.inner.forEach(error =>  {
+                        if(errs[error.path] == undefined){ 
+                            errs[error.path] = []
+                        }
+                        errs[error.path].push(error.errors)
+                    })
+                }
+                let key = err.message.split(" ")[0].toLowerCase();
+                if(errs[key] == undefined){ 
+                    errs[key] = [err.message]
+                }
+                console.log(errs);
+                throw new ApolloError(err.message, 400);
             }
         }
     }

@@ -28,12 +28,27 @@ const password = yup
     .min(5, 'Password should have atleast 5 characters.')
     .max(10, 'Password should have atmost 10 characters.');
 
+const birthDate = yup
+    .date()
+    .required("Birth Date is required.")
+
+const address = yup
+    .string()
+    .required("Address Date is required.")
+
+const gender = yup
+    .number()
+    .required("Gender is required.")
+
 export const UserRegisterationRules = yup.object().shape({
     username,
     firstName,
     lastName,
     password,
-    email
+    email,
+    address,
+    birthDate,
+    gender
 });
 
 export const UserAuthenticationRules = yup.object().shape({
