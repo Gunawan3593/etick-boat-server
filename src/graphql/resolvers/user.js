@@ -117,21 +117,35 @@ export default {
                     user: result
                 }
             } catch (err) {
-                let errs = [];
+                /*let errs = [];
                 if(err.inner){
                     err.inner.forEach(error =>  {
                         if(errs[error.path] == undefined){ 
                             errs[error.path] = []
                         }
-                        errs[error.path].push(error.errors)
+                        errs[error.path].push([error.errors])
                     })
                 }
-                let key = err.message.split(" ")[0].toLowerCase();
-                if(errs[key] == undefined){ 
-                    errs[key] = [err.message]
+                if(!errs){
+                    let key = err.message.split(" ")[0].toLowerCase();
+                    if(errs[key] == undefined){ 
+                        errs[key] = [err.message]
+                    }
+                }*/
+                let errs;
+                if(err.inner){
+                    err.inner.forEach(error =>  {
+                        if(!errs){
+                            errs = error.errors;
+                        }else{
+                            errs = errs + "," + error.errors;
+                        }
+                    })
                 }
-                console.log(errs);
-                throw new ApolloError(err.message, 400);
+                if(!errs){
+                    errs = err.message;
+                }
+                throw new ApolloError(errs, 400);
             }
         }
     }
