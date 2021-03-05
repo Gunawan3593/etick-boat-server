@@ -31,6 +31,7 @@ export default gql `
         postCode: String
         role: Int
         active: Boolean
+        cPassword: String
     }
 
     type User {

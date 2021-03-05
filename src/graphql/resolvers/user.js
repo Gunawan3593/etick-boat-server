@@ -46,7 +46,7 @@ export default {
                 // Check for the password
                 let isMatch = await compare(password, user.password);
                 if (!isMatch) {
-                    throw new ApolloError("Invalid password.");
+                    throw new ApolloError("Password is Invalid.");
                 }
                 // Serialize User
                 user = user.toObject();
@@ -59,13 +59,21 @@ export default {
                     token
                 }
             } catch (err) {
-            	if(err.errors) 
-            	{
-                  let msg = "";
-            	  err.errors.forEach(error => msg = msg + error + '<br />')
-                  err.message = msg
-            	}
-               throw new ApolloError(err.message, 400);
+            	let errs;
+                if(err.inner){
+                    err.inner.forEach(error =>  {
+                        if(!errs){
+                            errs = error.path+":"+error.errors;
+                        }else{
+                            errs = errs + "," + error.path+":"+error.errors;
+                        }
+                    })
+                }
+                if(!errs){
+                    let key = err.message.split(" ")[0].toLowerCase();
+                    errs = key+":"+err.message;
+                }
+                throw new ApolloError(errs, 400);
             }
         }
     },
