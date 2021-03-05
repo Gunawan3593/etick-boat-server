@@ -40,6 +40,10 @@ const gender = yup
     .number()
     .required("Gender is required.")
 
+const cPassword = yup
+    .string()
+    .required("Confirm Password is required.")
+
 export const UserRegisterationRules = yup.object().shape({
     username,
     firstName,
@@ -48,7 +52,8 @@ export const UserRegisterationRules = yup.object().shape({
     email,
     address,
     birthDate,
-    gender
+    gender,
+    cPassword
 });
 
 export const UserAuthenticationRules = yup.object().shape({

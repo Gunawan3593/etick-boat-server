@@ -82,7 +82,9 @@ export default {
                 
                 let {
                     email,
-                    username
+                    username,
+                    cPassword,
+                    password
                 } = newUser
 
                 // First Check if the username is already taken
@@ -101,6 +103,10 @@ export default {
                 if (user) {
                     throw new ApolloError("Email is already registred.");
                 }
+                if (password !== cPassword) {
+                    throw new ApolloError("Password dont matched.");
+                }
+
                 // Create new User Instance
                 user = new User(newUser);
                 // Hash the password
@@ -117,33 +123,19 @@ export default {
                     user: result
                 }
             } catch (err) {
-                /*let errs = [];
-                if(err.inner){
-                    err.inner.forEach(error =>  {
-                        if(errs[error.path] == undefined){ 
-                            errs[error.path] = []
-                        }
-                        errs[error.path].push([error.errors])
-                    })
-                }
-                if(!errs){
-                    let key = err.message.split(" ")[0].toLowerCase();
-                    if(errs[key] == undefined){ 
-                        errs[key] = [err.message]
-                    }
-                }*/
                 let errs;
                 if(err.inner){
                     err.inner.forEach(error =>  {
                         if(!errs){
-                            errs = error.errors;
+                            errs = error.path+":"+error.errors;
                         }else{
-                            errs = errs + "," + error.errors;
+                            errs = errs + "," + error.path+":"+error.errors;
                         }
                     })
                 }
                 if(!errs){
-                    errs = err.message;
+                    let key = err.message.split(" ")[0].toLowerCase();
+                    errs = key+":"+err.message;
                 }
                 throw new ApolloError(errs, 400);
             }
