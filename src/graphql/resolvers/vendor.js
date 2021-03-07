@@ -92,16 +92,34 @@ export default {
             Vendor,
             user
         }) => {
-            await NewVendorValidationRules.validate(newVendor, {
-                abortEarly: false
-            });
+            try{
+                await NewVendorValidationRules.validate(newVendor, {
+                    abortEarly: false
+                });
 
-            let result = await Vendor.create({
-                ...newVendor,
-                inputBy: user._id
-            });
-            await result.populate('inputBy').execPopulate();
-            return result;
+                let result = await Vendor.create({
+                    ...newVendor,
+                    inputBy: user._id
+                });
+                await result.populate('inputBy').execPopulate();
+                return result;
+            }catch(err){
+                let errs;
+                if(err.inner){
+                    err.inner.forEach(error =>  {
+                        if(!errs){
+                            errs = error.path+":"+error.errors;
+                        }else{
+                            errs = errs + "," + error.path+":"+error.errors;
+                        }
+                    })
+                }
+                if(!errs){
+                    let key = err.message.split(" ")[0].toLowerCase();
+                    errs = key+":"+err.message;
+                }
+                throw new ApolloError(errs, 400);
+            }
         },
         editVendorByID: async (_, {
             id,
