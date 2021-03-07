@@ -1,0 +1,53 @@
+query GET_ALL_VENDORS {
+  getAllVendors {
+    id
+    name
+    descriptions
+    createdAt
+    updatedAt
+  }
+}
+
+query VENDOR_BY_ID($id: ID!) {
+  getVendorById(id:$id) {
+    id
+    name
+    descriptions
+    updatedAt
+    createdAt
+  }
+}
+
+
+mutation CREATE_NEW_VENDOR(
+  $name: String!
+  $descriptions: String!
+) {
+  createNewVendor(
+    newVendor: { 
+        name: $name, 
+        descriptions: $descriptions
+    }
+  ) {
+    name
+    descriptions
+  }
+}
+
+mutation EDIT_VENDOR_BY_ID($id: ID!, $updatedVendor: VendorInput!) {
+  editVendorByID(updatedVendor: $updatedVendor, id: $id) {
+    id
+    name
+    descriptions
+    updatedAt
+    createdAt
+  }
+}
+
+mutation DELETE_VENDOR_BY_ID($id: ID!){
+  deleteVendorById(id:$id){
+    id
+    message
+    success
+  }
+}
