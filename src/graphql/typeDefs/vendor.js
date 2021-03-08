@@ -19,13 +19,14 @@ export default gql `
     input VendorInput {
         name:String!
         descriptions: String!
-        active: String
+        active: Boolean
     }
 
     type Vendor {
         id: ID!
         name:String!
         descriptions: String!
+        active: Boolean
         updatedAt:String
         createdAt: String
         inputBy: User!
