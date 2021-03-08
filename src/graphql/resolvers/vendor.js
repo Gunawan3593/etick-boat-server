@@ -44,11 +44,11 @@ export default {
         },
         getVendorsByLimitAndPage: async (_, {
             page,
-            limit
+            limit,
+            search
         }, {
             Vendor
         }) => {
-
             const options = {
                 page: page || 1,
                 limit: limit || 10,
@@ -58,29 +58,10 @@ export default {
                 populate: 'inputBy',
                 customLabels: myCustomLabels
             };
-
-            let vendors = await Vendor.paginate({}, options);
-            return vendors;
-        },
-        getAuthenticatedUsersVendors: async (_, {
-            page,
-            limit
-        }, {
-            Vendor,
-            user
-        }) => {
-            const options = {
-                page: page || 1,
-                limit: limit || 10,
-                sort: {
-                    createdAt: -1
-                },
-                populate: 'inputBy',
-                customLabels: myCustomLabels
-            };
-
-            let vendors = await Vendor.paginate({
-                inputBy: user._id.toString()
+          
+            let vendors = await Vendor.paginate({ 
+                $or: [{ name: { $regex: '.*' + search + '.*'}},
+                {descriptions: { $regex: '.*' + search + '.*'}}]
             }, options);
             return vendors;
         }
