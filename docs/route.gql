@@ -1,5 +1,5 @@
-query GET_ALL_VENDORS {
-  getAllVendors {
+query GET_ALL_ROUTES {
+  getAllRoutes {
     id
     name
     descriptions
@@ -7,8 +7,8 @@ query GET_ALL_VENDORS {
   }
 }
 
-query VENDOR_BY_ID($id: ID!) {
-  getVendorById(id:$id) {
+query ROUTE_BY_ID($id: ID!) {
+  getRouteById(id:$id) {
     id
     name
     descriptions
@@ -16,13 +16,13 @@ query VENDOR_BY_ID($id: ID!) {
   }
 }
 
-query VENDOR_BY_LIMIT_PAGE($page: Int!, $limit: Int!, $search: String) {
-  getVendorsByLimitAndPage(
+query ROUTE_BY_LIMIT_PAGE($page: Int!, $limit: Int!, $search: String) {
+  getRoutesByLimitAndPage(
     page: $page,
     limit: $limit,
     search: $search
   ){
-    vendors{
+    routes{
       id,
       name,
       descriptions,
@@ -36,19 +36,18 @@ query VENDOR_BY_LIMIT_PAGE($page: Int!, $limit: Int!, $search: String) {
       hasPrevPage
       hasNextPage
       perPage
-      vendorCount
+      routeCount
     }
   }
 }
 
-
-mutation CREATE_NEW_VENDOR(
+mutation CREATE_NEW_ROUTE(
   $name: String!
   $descriptions: String!
   $active: Boolean
 ) {
-  createNewVendor(
-    newVendor: { 
+  createNewRoute(
+    newRoute: { 
         name: $name, 
         descriptions: $descriptions
         active: $active
@@ -61,8 +60,8 @@ mutation CREATE_NEW_VENDOR(
   }
 }
 
-mutation EDIT_VENDOR_BY_ID($id: ID!, $name:String!, $descriptions:String!, $active:Boolean) {
-  editVendorByID(updatedVendor: {
+mutation EDIT_ROUTE_BY_ID($id: ID!, $name:String!, $descriptions:String!, $active:Boolean) {
+  editRouteByID(updatedRoute: {
     name : $name,
     descriptions : $descriptions,
     active : $active
@@ -74,8 +73,8 @@ mutation EDIT_VENDOR_BY_ID($id: ID!, $name:String!, $descriptions:String!, $acti
   }
 }
 
-mutation DELETE_VENDOR_BY_ID($id: ID!){
-  deleteVendorById(id:$id){
+mutation DELETE_ROUTE_BY_ID($id: ID!){
+  deleteRouteById(id:$id){
     id
     message
     success
