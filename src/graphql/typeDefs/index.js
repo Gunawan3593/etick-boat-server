@@ -4,6 +4,7 @@ import post from './post';
 import user from './user';
 import vendor from './vendor';
 import route from './route';
+import bank from './bank';
 
 export default [
     baseDefs,
@@ -11,5 +12,6 @@ export default [
     user,
     image,
     vendor,
-    route
+    route,
+    bank
 ];

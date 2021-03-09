@@ -1,0 +1,22 @@
+mutation CREATE_NEW_BANK(
+  $name: String! 
+  $itno: String! 
+  $account: String! 
+  $active: Boolean 
+  $notes: String
+){
+  createNewBank(
+    newBank : {
+      name: $name,
+      itno: $itno,
+      account: $account,
+      active: $active,
+      notes: $notes
+    }
+  ){
+    name
+    itno
+    account
+    active
+  }
+}
