@@ -16,4 +16,4 @@ from './Route';
 export {
     default as Bank
 }
-from './bank';
+from './Bank';
