@@ -4,6 +4,7 @@ import image from './image';
 import vendor from './vendor';
 import route from './route';
 import bank from './bank';
+import price from './price';
 
 export default [
     post,
@@ -11,5 +12,6 @@ export default [
     image,
     vendor,
     route,
-    bank
+    bank,
+    price
 ];

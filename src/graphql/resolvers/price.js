@@ -3,12 +3,12 @@ import {
 } from 'apollo-server-express';
 
 import {
-    NewVendorValidationRules
+    NewPriceValidationRules
 } from '../../validators';
 
 const myCustomLabels = {
-    totalDocs: 'vendorCount',
-    docs: 'vendors',
+    totalDocs: 'priceCount',
+    docs: 'prices',
     limit: 'perPage',
     page: 'currentPage',
     nextPage: 'next',
@@ -20,38 +20,34 @@ const myCustomLabels = {
 
 export default {
     Query: {
-        getAllVendors: async (_, { status }, {
-            Vendor
+        getAllPrices: async (_, {}, {
+            Price
         }) => {
-            let filter = {};
-            if(status){
-                filter = { active: status };
-            }
-            let vendors = await Vendor.find(filter).populate('inputBy');
-            return vendors;
+            let prices = await Price.find().populate(['inputBy','vendor','routeFrom','routeTo']);
+            return prices;
         },
-        getVendorById: async (_, {
+        getPriceById: async (_, {
             id
         }, {
-            Vendor
+            Price
         }) => {
             try {
-                let vendor = await Vendor.findById(id);
-                if (!vendor) {
-                    throw new Error("Vendor not found.");
+                let price = await Price.findById(id);
+                if (!price) {
+                    throw new Error("Price not found.");
                 }
-                await vendor.populate('inputBy').execPopulate();
-                return vendor;
+                await price.populate(['inputBy','vendor','routeFrom','routeTo']).execPopulate();
+                return price;
             } catch (err) {
                 throw new ApolloError(err.message);
             }
         },
-        getVendorsByLimitAndPage: async (_, {
+        getPricesByLimitAndPage: async (_, {
             page,
             limit,
             search
         }, {
-            Vendor
+            Price
         }) => {
             const options = {
                 page: page || 1,
@@ -59,34 +55,34 @@ export default {
                 sort: {
                     createdAt: -1
                 },
-                populate: 'inputBy',
+                populate: ['inputBy','vendor','routeFrom','routeTo'],
                 customLabels: myCustomLabels
             };
           
-            let vendors = await Vendor.paginate({ 
+            let prices = await Price.paginate({ 
                 $or: [{ name: { $regex: '.*' + search + '.*'}},
                 {descriptions: { $regex: '.*' + search + '.*'}}]
             }, options);
-            return vendors;
+            return prices;
         }
     },
     Mutation: {
-        createNewVendor: async (_, {
-            newVendor
+        createNewPrice: async (_, {
+            newPrice
         }, {
-            Vendor,
+            Price,
             user
         }) => {
             try{
-                await NewVendorValidationRules.validate(newVendor, {
+                await NewPriceValidationRules.validate(newPrice, {
                     abortEarly: false
                 });
 
-                let result = await Vendor.create({
-                    ...newVendor,
+                let result = await Price.create({
+                    ...newPrice,
                     inputBy: user._id
                 });
-                await result.populate('inputBy').execPopulate();
+                await result.populate(['inputBy','vendor','routeFrom','routeTo']).execPopulate();
                 return result;
             }catch(err){
                 let errs;
@@ -106,55 +102,51 @@ export default {
                 throw new ApolloError(errs, 400);
             }
         },
-        editVendorByID: async (_, {
+        editPriceByID: async (_, {
             id,
-            updatedVendor
+            updatedPrice
         }, {
-            Vendor,
-            user
+            Price
         }) => {
-            await NewVendorValidationRules.validate(updatedVendor, {
+            await NewPriceValidationRules.validate(updatedPrice, {
                 abortEarly: false
             });
             try {
-                let editedVendor = await Vendor.findOneAndUpdate({
-                    _id: id,
-                    inputBy: user._id.toString()
+                let editedPrice = await Price.findOneAndUpdate({
+                    _id: id
                 }, {
-                    ...updatedVendor
+                    ...updatedPrice
                 }, {
                     new: true
-                });
+                }).populate(['vendor','routeFrom','routeTo']);
 
-                if (!editedVendor) {
-                    throw new Error("Unable to edit the vendor.");
+                if (!editedPrice) {
+                    throw new Error("Unable to edit the price.");
                 }
 
-                return editedVendor;
+                return editedPrice;
             } catch (err) {
                 throw new ApolloError(err.message, 400);
             }
         },
-        deleteVendorById: async (_, {
+        deletePriceById: async (_, {
             id
         }, {
-            Vendor,
-            user
+            Price
         }) => {
             try {
-                let deletedVendor = await Vendor.findOneAndDelete({
-                    _id: id,
-                    inputBy: user._id.toString()
+                let deletedPrice = await Price.findOneAndDelete({
+                    _id: id
                 });
 
-                if (!deletedVendor) {
-                    throw new Error("Unable to deleted the vendor.");
+                if (!deletedPrice) {
+                    throw new Error("Unable to deleted the price.");
                 }
 
                 return {
                     success: true,
-                    id: deletedVendor.id,
-                    message: "Your vendors is deleted.",
+                    id: deletedPrice.id,
+                    message: "Your prices is deleted.",
                 }
             } catch (err) {
                 console.log("DELETED_ERR", err);

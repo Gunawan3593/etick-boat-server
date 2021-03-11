@@ -4,7 +4,7 @@ import {
 
 export default gql `
     extend type Query {
-      getAllVendors: [Vendor!]!
+      getAllVendors(status: Boolean): [Vendor!]!
       getVendorById(id: ID!): Vendor!
       getVendorsByLimitAndPage(page: Int, limit: Int, search: String): VendorPaginator!
       getAuthenticatedUsersVendors(page: Int, limit: Int): VendorPaginator! @isAuth

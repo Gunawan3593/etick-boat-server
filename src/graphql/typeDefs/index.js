@@ -5,6 +5,7 @@ import user from './user';
 import vendor from './vendor';
 import route from './route';
 import bank from './bank';
+import price from './price';
 
 export default [
     baseDefs,
@@ -13,5 +14,6 @@ export default [
     image,
     vendor,
     route,
-    bank
+    bank,
+    price
 ];

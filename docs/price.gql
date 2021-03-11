@@ -1,0 +1,133 @@
+query GET_ALL_PRICES {
+  getAllPrices {
+    id
+    name
+    descriptions
+    price
+    unit
+    vendor
+    routeFrom
+    routeTo
+    active
+  }
+}
+
+query PRICE_BY_ID($id: ID!) {
+  getPriceById(id:$id) {
+    id
+    name
+    descriptions
+    price
+    unit
+    vendor
+    routeFrom
+    routeTo
+    active
+  }
+}
+
+query PRICE_BY_LIMIT_PAGE($page: Int!, $limit: Int!, $search: String) {
+  getPricesByLimitAndPage(
+    page: $page,
+    limit: $limit,
+    search: $search
+  ){
+    prices{
+        id
+        name
+        descriptions
+        price
+        unit
+        vendor
+        routeFrom
+        routeTo
+        active
+    }
+    paginator{
+      currentPage,
+      pageCount,
+      prev,
+      next,
+      hasPrevPage
+      hasNextPage
+      perPage
+      priceCount
+    }
+  }
+}
+
+
+mutation CREATE_NEW_PRICE(
+  $name: String!
+  $descriptions: String!
+  $price: Int
+  $unit: Int!
+  $vendor: String!
+  $routeTo: String!
+  $routeFrom: String!
+  $active: Boolean
+) {
+  createNewPrice(
+    newPrice: { 
+        name: $name, 
+        descriptions: $descriptions
+        price: $price
+        unit: $unit
+        active: $active
+        vendor: $vendor
+        routeFrom: $routeFrom
+        routeTo: $routeTo
+    }
+  ) {
+    id
+    name
+    descriptions
+    price
+    unit
+    vendor
+    routeFrom
+    routeTo
+    active
+  }
+}
+
+mutation EDIT_PRICE_BY_ID(
+  $id: ID!,
+  $name: String!
+  $descriptions: String!
+  $price: Int
+  $unit: Int!
+  $vendor: String!
+  $routeTo: String!
+  $routeFrom: String!
+  $active: Boolean
+  ) {
+  editPriceByID(updatedPrice: {
+    name: $name, 
+    descriptions: $descriptions
+    price: $price
+    unit: $unit
+    active: $active
+    vendor: $vendor
+    routeFrom: $routeFrom
+    routeTo: $routeTo
+  }, id: $id) {
+    id
+    name
+    descriptions
+    price
+    unit
+    vendor
+    routeFrom
+    routeTo
+    active
+  }
+}
+
+mutation DELETE_PRICE_BY_ID($id: ID!){
+  deletePriceById(id:$id){
+    id
+    message
+    success
+  }
+}

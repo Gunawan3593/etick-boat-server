@@ -20,10 +20,14 @@ const myCustomLabels = {
 
 export default {
     Query: {
-        getAllRoutes: async (_, {}, {
+        getAllRoutes: async (_, { status }, {
             Route
         }) => {
-            let routes = await Route.find().populate('inputBy');
+            let filter = {};
+            if(status){
+                filter = { active: status };
+            }
+            let routes = await Route.find(filter).populate('inputBy');
             return routes;
         },
         getRouteById: async (_, {

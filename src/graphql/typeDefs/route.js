@@ -4,7 +4,7 @@ import {
 
 export default gql `
     extend type Query {
-      getAllRoutes: [Route!]!
+      getAllRoutes(status: Boolean): [Route!]!
       getRouteById(id: ID!): Route!
       getRoutesByLimitAndPage(page: Int, limit: Int, search: String): RoutePaginator!
       getAuthenticatedUsersRoutes(page: Int, limit: Int): RoutePaginator! @isAuth
