@@ -40,6 +40,9 @@ const PriceSchema = new Schema({
     inputBy: {
         ref: 'users',
         type: Schema.Types.ObjectId
+    },
+    imagePath: {
+        type: String
     }
 }, {
     timestamps: true

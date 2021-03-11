@@ -24,7 +24,8 @@ export default gql `
         vendor: String!
         routeFrom: String!
         routeTo: String!
-        active: Boolean
+        active: Boolean,
+        imagePath: String
     }
 
     type Price {
@@ -40,6 +41,7 @@ export default gql `
         routeFrom: Route!
         routeTo: Route!
         inputBy: User!
+        imagePath: String
     }
 
     type PricePaginator {
